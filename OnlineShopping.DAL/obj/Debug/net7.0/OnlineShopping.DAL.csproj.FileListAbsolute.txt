@@ -1,0 +1,15 @@
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\bin\Debug\net7.0\OnlineShopping.DAL.deps.json
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\bin\Debug\net7.0\OnlineShopping.DAL.dll
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\bin\Debug\net7.0\OnlineShopping.DAL.pdb
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\bin\Debug\net7.0\OnlineShopping.Domain.dll
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\bin\Debug\net7.0\OnlineShopping.Domain.pdb
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\OnlineShopping.DAL.csproj.AssemblyReference.cache
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\OnlineShopping.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\OnlineShopping.DAL.AssemblyInfoInputs.cache
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\OnlineShopping.DAL.AssemblyInfo.cs
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\OnlineShopping.DAL.csproj.CoreCompileInputs.cache
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\OnlineShopping.DAL.csproj.CopyComplete
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\OnlineShopping.DAL.dll
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\refint\OnlineShopping.DAL.dll
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\OnlineShopping.DAL.pdb
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\ref\OnlineShopping.DAL.dll
