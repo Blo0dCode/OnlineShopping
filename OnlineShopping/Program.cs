@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShopping.DAL;
 using OnlineShopping.DAL.Interfaces;
 using OnlineShopping.DAL.Repositories;
+using OnlineShopping.Domain.Implementations;
+using OnlineShopping.Domain.Interface;
 using OnlineShopping.Service.Implementations;
 using OnlineShopping.Service.Interfaces;
 
@@ -16,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(o =>
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IMapper, Mapper>(); //TODO правильно ли я его всунул
 
 var app = builder.Build();
 

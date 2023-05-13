@@ -1,13 +1,14 @@
-@model IEnumerable<OnlineShopping.Domain.Entity.Product>
+@model IEnumerable<OnlineShopping.Domain.ViewModels.Product.ProductViewModel>
 
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
 
-@foreach (var product in Model)
+@foreach (var productViewModel in Model)
 {
-    <p>@product.Name</p>
-    <p>@product.Description</p>
-    <p>@product.Price</p>
+    <p>@productViewModel.Name</p>
+    <p>@productViewModel.Description</p>
+    <p>@productViewModel.Price</p>
+    <p>@productViewModel.CategoryId</p>
 }

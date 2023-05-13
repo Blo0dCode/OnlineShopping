@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShopping.DAL.Interfaces;
 using OnlineShopping.Domain.Entity;
 using OnlineShopping.Domain.Enum;
+using OnlineShopping.Domain.Interface;
 using OnlineShopping.Domain.Response;
 using OnlineShopping.Domain.ViewModels.Product;
 using OnlineShopping.Service.Interfaces;
@@ -11,38 +12,42 @@ namespace OnlineShopping.Service.Implementations;
 
 public class ProductService : IProductService
 {
+    private readonly IMapper _mapper;
     private readonly IProductRepository _productRepository;
 
-    public ProductService(IProductRepository productRepository)
+    public ProductService(IProductRepository productRepository, IMapper mapper)
     {
         _productRepository = productRepository;
+        _mapper = mapper;
     }
 
-    public IBaseResponse<List<Product>> GetProductsAsync()
+    public IBaseResponse<List<ProductViewModel>> GetProductsAsync()
     {
         try
         {
-            var products = _productRepository.GetAll().ToList(); //TODO
+            var products = _productRepository.GetAll().ToList();
             if (!products.Any())
             {
-                return new BaseResponse<List<Product>>()
+                return new BaseResponse<List<ProductViewModel>>()
                 {
                     Description = "Найдено 0 элементов",
                     StatusCode = StatusCode.NoContent
                 };
             }
 
-            return new BaseResponse<List<Product>>()
+            var productsViewModel = products.Select(x => _mapper.ToProductViewModel(x)).ToList(); //TODO ToListAsync? 
+            
+            return new BaseResponse<List<ProductViewModel>>()
             {
-                Data = products,
+                Data = productsViewModel,
                 StatusCode = StatusCode.OK
             };
         }
         catch (Exception e)
         {
-            return new BaseResponse<List<Product>>()
+            return new BaseResponse<List<ProductViewModel>>()
             {
-                Description = $"[GetProducts] : {e.Message}",
+                Description = $"[GetProductsAsync] : {e.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
@@ -62,13 +67,7 @@ public class ProductService : IProductService
                 };
             }
 
-            var data = new ProductViewModel()
-            {
-                Name = product.Name,
-                CategoryId = product.CategoryId,
-                Description = product.Description,
-                Price = product.Price
-            };
+            var data = _mapper.ToProductViewModel(product);
 
             return new BaseResponse<ProductViewModel>()
             {
@@ -80,23 +79,17 @@ public class ProductService : IProductService
         {
             return new BaseResponse<ProductViewModel>()
             {
-                Description = $"[GetProductById] : {e.Message}",
+                Description = $"[GetProductByIdAsync] : {e.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
     } //
 
-    public async Task<IBaseResponse<Product>> CreateProductAsync(ProductViewModel entity, byte[] imageData)
+    public async Task<IBaseResponse<Product>> CreateProductAsync(ProductViewModel productViewModel, byte[] imageData)
     {
         try
         {
-            var product = new Product()
-            {
-                Name = entity.Name,
-                CategoryId = entity.CategoryId,
-                Description = entity.Description,
-                Price = entity.Price
-            };
+            var product = _mapper.ToProduct(productViewModel);
 
             await _productRepository.Create(product);
 
@@ -110,13 +103,13 @@ public class ProductService : IProductService
         {
             return new BaseResponse<Product>()
             {
-                Description = $"[Create] : {e.Message}",
+                Description = $"[CreateProductAsync] : {e.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
     } //
 
-    public async Task<IBaseResponse<bool>> DeleteProductAsync(int id)
+    public async Task<IBaseResponse<bool>> DeleteProductByIdAsync(int id)
     {
         try
         {
@@ -143,17 +136,17 @@ public class ProductService : IProductService
         {
             return new BaseResponse<bool>()
             {
-                Description = $"[Delete] : {e.Message}",
+                Description = $"[DeleteProductByIdAsync] : {e.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
     } //
 
-    public async Task<IBaseResponse<Product>> UpdateProductAsync(int id, ProductViewModel model)
+    public async Task<IBaseResponse<Product>> UpdateProductAsync(ProductViewModel productViewModel)
     {
         try
         {
-            var product = await _productRepository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+            var product = await _productRepository.GetAll().FirstOrDefaultAsync(x => x.Id == productViewModel.Id);
             if (product == null)
             {
                 return new BaseResponse<Product>()
@@ -163,10 +156,11 @@ public class ProductService : IProductService
                 };
             }
 
-            product.Name = model.Name;
-            product.Description = model.Description;
-            product.CategoryId = model.CategoryId;
-            product.Price = model.Price;
+            product.Id = productViewModel.Id;
+            product.Name = productViewModel.Name;
+            product.Description = productViewModel.Description;
+            product.CategoryId = productViewModel.CategoryId;
+            product.Price = productViewModel.Price;
 
             await _productRepository.Update(product);
             
@@ -180,39 +174,41 @@ public class ProductService : IProductService
         {
             return new BaseResponse<Product>()
             {
-                Description = $"[Edit] : {e.Message}",
+                Description = $"[UpdateProductAsync] : {e.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
-    }
+    } //
 
-    public IBaseResponse<List<Product>> GetProductsByCategoryIdAsync(int id, Product entity) //TODO ViewModel?
+    public IBaseResponse<List<ProductViewModel>> GetProductsByCategoryIdAsync(int categoryId)
     {
         try
         {
-            var products = _productRepository.GetProductsByCategoryId(1).ToList();//TODO async??
+            var products = _productRepository.GetProductsByCategoryId(categoryId).ToList();
             if (!products.Any())
             {
-                return new BaseResponse<List<Product>>()
+                return new BaseResponse<List<ProductViewModel>>()
                 {
                     Description = "Найдено 0 элементов",
                     StatusCode = StatusCode.NoContent
                 };
             }
+
+            var productsViewModel = products.Select(x => _mapper.ToProductViewModel(x)).ToList(); //TODO async?
             
-            return new BaseResponse<List<Product>>()
+            return new BaseResponse<List<ProductViewModel>>()
             {
-                Data = products,
+                Data = productsViewModel,
                 StatusCode = StatusCode.OK
             };
         }
         catch (Exception e)
         {
-            return new BaseResponse<List<Product>>()
+            return new BaseResponse<List<ProductViewModel>>()
             {
                 Description = $"[GetProductsByCategoryIdAsync] : {e.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
-    }
+    } //
 }

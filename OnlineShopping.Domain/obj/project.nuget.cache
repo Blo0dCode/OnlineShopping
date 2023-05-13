@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "ADdu1hqJ0w7oVqkrIdVSQK/HSANYEUO2P/8iT5qDaWWcn5df7Id4jaPpT7UpLz8ai1s61ohEqwzdq78U2z0SLQ==",
+  "dgSpecHash": "DHXUhSkLpnu63jCxW8Mi9BpAQ/HQjvLVvVnvjuhIhj4vhgs654/QlxiMjXSZFTQBN4ZlhtQJ+qqXH1TN9l2HuA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Бал у Сатаны\\Desktop\\OnlineShopping\\OnlineShopping.Domain\\OnlineShopping.Domain.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.2.0\\microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
+    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\microsoft.extensions.primitives\\2.2.0\\microsoft.extensions.primitives.2.2.0.nupkg.sha512",
+    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\system.memory\\4.5.1\\system.memory.4.5.1.nupkg.sha512",
+    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.1\\system.runtime.compilerservices.unsafe.4.5.1.nupkg.sha512"
+  ],
   "logs": []
 }

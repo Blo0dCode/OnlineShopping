@@ -12,6 +12,6 @@ public class BaseResponse<T> : IBaseResponse<T>
 public interface IBaseResponse<T>
 {
     T Data { get; set; }
-    public StatusCode StatusCode { get; }
-    public string Description { get; }
+    StatusCode StatusCode { get; }
+    string Description { get; }
 }

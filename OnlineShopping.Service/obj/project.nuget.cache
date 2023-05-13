@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Zf4Erctb/kFuHTUnyVmnNAjNxhotqRD5UGlg+Efo47+DPNuTjGSp3RD6tfnl4U9TsTvYOJFDKlPS2quaxMMJ/A==",
+  "dgSpecHash": "R+hxtWoGjIq/eBze261NsgcyN/rLu6PweqMz+w++eLxi5htuOgJLsJp7b8SHMuXmufb1VNexxARv4sjFDpc4eA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Бал у Сатаны\\Desktop\\OnlineShopping\\OnlineShopping.Service\\OnlineShopping.Service.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.2.0\\microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
     "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.0-preview.3.23174.2\\microsoft.entityframeworkcore.8.0.0-preview.3.23174.2.nupkg.sha512",
     "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.0-preview.3.23174.2\\microsoft.entityframeworkcore.abstractions.8.0.0-preview.3.23174.2.nupkg.sha512",
     "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.0-preview.3.23174.2\\microsoft.entityframeworkcore.analyzers.8.0.0-preview.3.23174.2.nupkg.sha512",

@@ -1,3 +1,5 @@
+using OnlineShopping.Domain.ViewModels.Product;
+
 namespace OnlineShopping.Domain.Entity;
 
 public class Product
