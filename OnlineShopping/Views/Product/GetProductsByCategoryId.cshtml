@@ -1,0 +1,14 @@
+@model IEnumerable<OnlineShopping.Domain.ViewModels.Product.ProductViewModel>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+@foreach (var productViewModel in Model)
+{
+    <p>@productViewModel.Name</p>
+    <p>@productViewModel.Description</p>
+    <p>@productViewModel.Price</p>
+    <p>@productViewModel.CategoryId</p>
+}

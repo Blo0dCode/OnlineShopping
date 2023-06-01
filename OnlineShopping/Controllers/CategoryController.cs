@@ -16,16 +16,13 @@ public class CategoryController : Controller
     [HttpGet]
     public IActionResult Index(int id)
     {
-        // Получаем категорию по ее идентификатору
         var category = _categoryService.GetCategoryById(id);
 
         if (category == null)
         {
-            // Если категория не найдена, возвращаем страницу ошибки 404
             return HttpNotFound();
         }
 
-        // Получаем список продуктов, которые относятся к данной категории
         var products = _productService.GetProductsByCategoryId(id);
 
         return View(products);

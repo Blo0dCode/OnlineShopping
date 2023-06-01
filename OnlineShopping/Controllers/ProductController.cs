@@ -17,10 +17,9 @@ public class ProductController : Controller
     }
 
     [HttpGet]
-    public IActionResult GetProducts(string category)
+    public IActionResult GetProducts(int id)
     {
-        var responsee = _productService.GetProductsAsync();
-        var response = _productService.GetProductsByCategoryIdAsync(1);
+        var response = _productService.GetProductsAsync();
         if (response.StatusCode == Domain.Enum.StatusCode.OK)
         {
             return View(response.Data);
@@ -43,11 +42,23 @@ public class ProductController : Controller
         return View("Error");
     }
 
+    [HttpGet]
+    public IActionResult GetProductsByCategoryId(int id)
+    {
+        var response = _productService.GetProductsByCategoryIdAsync(id);
+        if (response.StatusCode == Domain.Enum.StatusCode.OK)
+        {
+            return View(response.Data);
+        }
+
+        return View("Error");
+    }
+
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var response = await _productService.DeleteProductByIdAsync(id);
-        if (response.StatusCode == Domain.Enum.StatusCode.Created)
+        if (response.StatusCode == Domain.Enum.StatusCode.Deleted)
         {
             return RedirectToAction("GetProducts");
         }
@@ -57,9 +68,9 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(ProductViewModel viewModel) // TODO через постман как оправить валидную модель?
+    public async Task<IActionResult> Create([FromBody] ProductViewModel viewModel)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             byte[] imageData;
             using (var binaryReader = new BinaryReader(viewModel.Avatar.OpenReadStream()))
@@ -67,20 +78,23 @@ public class ProductController : Controller
                 imageData = binaryReader.ReadBytes((int)viewModel.Avatar.Length);
             }
 
-            await _productService.CreateProductAsync(viewModel, imageData);
+            var response = await _productService.CreateProductAsync(viewModel, imageData);
+            if (response.StatusCode == Domain.Enum.StatusCode.Created)
+            {
+                return RedirectToAction("GetProducts");
+            }
         }
 
-        return RedirectToAction("GetProducts");
+        return View("Error");
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update(ProductViewModel viewModel)
+    public async Task<IActionResult> Update([FromBody] ProductViewModel viewModel)
     {
         if (ModelState.IsValid)
         {
             await _productService.UpdateProductAsync(viewModel);
         }
-
         return RedirectToAction("GetProducts");
     }
 }

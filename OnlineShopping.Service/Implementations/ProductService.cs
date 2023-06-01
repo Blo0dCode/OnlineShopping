@@ -25,7 +25,7 @@ public class ProductService : IProductService
     {
         try
         {
-            var products = _productRepository.GetAll().ToList();
+            var products = _productRepository.GetAll().ToList(); //TODO async?
             if (!products.Any())
             {
                 return new BaseResponse<List<ProductViewModel>>()
@@ -36,7 +36,7 @@ public class ProductService : IProductService
             }
 
             var productsViewModel = products.Select(x => _mapper.ToProductViewModel(x)).ToList(); //TODO ToListAsync? 
-            
+
             return new BaseResponse<List<ProductViewModel>>()
             {
                 Data = productsViewModel,
@@ -90,6 +90,7 @@ public class ProductService : IProductService
         try
         {
             var product = _mapper.ToProduct(productViewModel);
+            product.Avatar = imageData; //TODO как от этого избавиться?
 
             await _productRepository.Create(product);
 
@@ -129,7 +130,7 @@ public class ProductService : IProductService
             return new BaseResponse<bool>()
             {
                 Data = true,
-                StatusCode = StatusCode.Created
+                StatusCode = StatusCode.Deleted
             };
         }
         catch (Exception e)
@@ -163,7 +164,7 @@ public class ProductService : IProductService
             product.Price = productViewModel.Price;
 
             await _productRepository.Update(product);
-            
+
             return new BaseResponse<Product>()
             {
                 Data = product,
@@ -184,7 +185,7 @@ public class ProductService : IProductService
     {
         try
         {
-            var products = _productRepository.GetProductsByCategoryId(categoryId).ToList();
+            var products = _productRepository.GetProductsByCategoryId(categoryId).ToList(); // TODO async?
             if (!products.Any())
             {
                 return new BaseResponse<List<ProductViewModel>>()
@@ -195,7 +196,7 @@ public class ProductService : IProductService
             }
 
             var productsViewModel = products.Select(x => _mapper.ToProductViewModel(x)).ToList(); //TODO async?
-            
+
             return new BaseResponse<List<ProductViewModel>>()
             {
                 Data = productsViewModel,

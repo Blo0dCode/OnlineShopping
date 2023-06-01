@@ -21,7 +21,6 @@ public class ProductViewModel
     [Required(ErrorMessage = "Укажите стоимость")]
     public decimal Price { get; set; }
     
-    
     [Display(Name = "Категория одежды")]
     [Required(ErrorMessage = "Введите категорию одежды")]
     public int CategoryId { get; set; }

@@ -12,5 +12,6 @@ public enum StatusCode
     InternalServerError = 500,
 
     ProductsNotFound = 1,
-    ProductNotFound = 2
+    ProductNotFound = 2,
+    Deleted = 3
 }
