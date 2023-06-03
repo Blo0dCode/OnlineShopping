@@ -7,11 +7,11 @@ namespace OnlineShopping.Service.Interfaces;
 
 public interface IProductService
 {
-    IBaseResponse<List<ProductViewModel>> GetProductsAsync();
+    IBaseResponse<List<Product>> GetProductsAsync();
     Task<IBaseResponse<ProductViewModel>> GetProductByIdAsync(int id);
     Task<IBaseResponse<Product>> CreateProductAsync(ProductViewModel model, byte[] imageData);
     Task<IBaseResponse<bool>> DeleteProductByIdAsync(int id);
     Task<IBaseResponse<Product>> UpdateProductAsync(ProductViewModel productViewModel);
 
-    IBaseResponse<List<ProductViewModel>> GetProductsByCategoryIdAsync(int categoryId);
+    IBaseResponse<List<ProductViewModel>> GetProductsByCategoryIdAsync(int id);
 }

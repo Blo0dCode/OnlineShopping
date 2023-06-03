@@ -10,14 +10,16 @@ namespace OnlineShopping.Controllers;
 public class ProductController : Controller
 {
     private readonly IProductService _productService;
+    private readonly ICategoryService _categoryService;
 
-    public ProductController(IProductService productService)
+    public ProductController(IProductService productService, ICategoryService categoryService)
     {
         _productService = productService;
+        _categoryService = categoryService;
     }
 
     [HttpGet]
-    public IActionResult GetProducts(int id)
+    public IActionResult GetProducts()
     {
         var response = _productService.GetProductsAsync();
         if (response.StatusCode == Domain.Enum.StatusCode.OK)
@@ -25,8 +27,7 @@ public class ProductController : Controller
             return View(response.Data);
         }
 
-        //return View("Error", $"{response.Description}");
-        return View("Error");
+        return View("Error", $"{response.Description}");
     }
 
     [HttpGet]
@@ -54,7 +55,7 @@ public class ProductController : Controller
         return View("Error");
     }
 
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var response = await _productService.DeleteProductByIdAsync(id);
@@ -63,26 +64,24 @@ public class ProductController : Controller
             return RedirectToAction("GetProducts");
         }
 
-        //return View("Error", $"{response.Description}");
-        return View("Error");
+        return View("Error", $"{response.Description}");
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ProductViewModel viewModel)
+    public async Task<IActionResult> Create(ProductViewModel viewModel)
     {
-        if (ModelState.IsValid)
-        {
-            byte[] imageData;
-            using (var binaryReader = new BinaryReader(viewModel.Avatar.OpenReadStream()))
-            {
-                imageData = binaryReader.ReadBytes((int)viewModel.Avatar.Length);
-            }
+        //if (ModelState.IsValid)
 
-            var response = await _productService.CreateProductAsync(viewModel, imageData);
-            if (response.StatusCode == Domain.Enum.StatusCode.Created)
-            {
-                return RedirectToAction("GetProducts");
-            }
+        byte[] imageData;
+        using (var binaryReader = new BinaryReader(viewModel.Avatar.OpenReadStream()))
+        {
+            imageData = binaryReader.ReadBytes((int)viewModel.Avatar.Length);
+        }
+
+        var response = await _productService.CreateProductAsync(viewModel, imageData);
+        if (response.StatusCode == Domain.Enum.StatusCode.Created)
+        {
+            return RedirectToAction("GetProducts");
         }
 
         return View("Error");
@@ -95,6 +94,7 @@ public class ProductController : Controller
         {
             await _productService.UpdateProductAsync(viewModel);
         }
+
         return RedirectToAction("GetProducts");
     }
 }

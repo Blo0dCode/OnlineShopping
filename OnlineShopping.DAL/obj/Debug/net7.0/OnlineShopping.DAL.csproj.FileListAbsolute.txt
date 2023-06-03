@@ -13,3 +13,5 @@ C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\De
 C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\refint\OnlineShopping.DAL.dll
 C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\OnlineShopping.DAL.pdb
 C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\ref\OnlineShopping.DAL.dll
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\bin\Debug\net7.0\OnlineShopping.DAL.runtimeconfig.json
+C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping.DAL\obj\Debug\net7.0\OnlineShopping.DAL.genruntimeconfig.cache

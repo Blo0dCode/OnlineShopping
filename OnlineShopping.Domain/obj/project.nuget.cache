@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "DHXUhSkLpnu63jCxW8Mi9BpAQ/HQjvLVvVnvjuhIhj4vhgs654/QlxiMjXSZFTQBN4ZlhtQJ+qqXH1TN9l2HuA==",
+  "dgSpecHash": "QM5DpP6a73FRCZvBzuyBP6DdAdtatRQkFTGR1KgLumWaAVPpMohbHMVG0Z1jS3Fqx93w1V9gFXApr1jGtrjKyA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Бал у Сатаны\\Desktop\\OnlineShopping\\OnlineShopping.Domain\\OnlineShopping.Domain.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.2.0\\microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
-    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\microsoft.extensions.primitives\\2.2.0\\microsoft.extensions.primitives.2.2.0.nupkg.sha512",
-    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\system.memory\\4.5.1\\system.memory.4.5.1.nupkg.sha512",
-    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.1\\system.runtime.compilerservices.unsafe.4.5.1.nupkg.sha512"
+    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\microsoft.aspnetcore.http.features\\6.0.0-preview.4.21253.5\\microsoft.aspnetcore.http.features.6.0.0-preview.4.21253.5.nupkg.sha512",
+    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0-preview.4.21253.7\\microsoft.extensions.primitives.6.0.0-preview.4.21253.7.nupkg.sha512",
+    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\system.io.pipelines\\6.0.0-preview.4.21253.7\\system.io.pipelines.6.0.0-preview.4.21253.7.nupkg.sha512",
+    "C:\\Users\\Бал у Сатаны\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0-preview.4.21253.7\\system.runtime.compilerservices.unsafe.6.0.0-preview.4.21253.7.nupkg.sha512"
   ],
   "logs": []
 }

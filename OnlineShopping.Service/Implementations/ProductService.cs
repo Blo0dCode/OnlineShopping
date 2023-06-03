@@ -14,38 +14,38 @@ public class ProductService : IProductService
 {
     private readonly IMapper _mapper;
     private readonly IProductRepository _productRepository;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public ProductService(IProductRepository productRepository, IMapper mapper)
+    public ProductService(IProductRepository productRepository, IMapper mapper, ICategoryRepository categoryRepository)
     {
         _productRepository = productRepository;
         _mapper = mapper;
+        _categoryRepository = categoryRepository;
     }
 
-    public IBaseResponse<List<ProductViewModel>> GetProductsAsync()
+    public IBaseResponse<List<Product>> GetProductsAsync()
     {
         try
         {
             var products = _productRepository.GetAll().ToList(); //TODO async?
             if (!products.Any())
             {
-                return new BaseResponse<List<ProductViewModel>>()
+                return new BaseResponse<List<Product>>()
                 {
                     Description = "Найдено 0 элементов",
                     StatusCode = StatusCode.NoContent
                 };
             }
 
-            var productsViewModel = products.Select(x => _mapper.ToProductViewModel(x)).ToList(); //TODO ToListAsync? 
-
-            return new BaseResponse<List<ProductViewModel>>()
+            return new BaseResponse<List<Product>>()
             {
-                Data = productsViewModel,
+                Data = products,
                 StatusCode = StatusCode.OK
             };
         }
         catch (Exception e)
         {
-            return new BaseResponse<List<ProductViewModel>>()
+            return new BaseResponse<List<Product>>()
             {
                 Description = $"[GetProductsAsync] : {e.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -89,8 +89,8 @@ public class ProductService : IProductService
     {
         try
         {
-            var product = _mapper.ToProduct(productViewModel);
-            product.Avatar = imageData; //TODO как от этого избавиться?
+            var category = _categoryRepository.GetCategoryByIdAsync(productViewModel.CategoryId);
+            var product = _mapper.ToProduct(productViewModel, category.FirstOrDefault(), imageData); //TODO правильно?
 
             await _productRepository.Create(product);
 
@@ -148,6 +148,7 @@ public class ProductService : IProductService
         try
         {
             var product = await _productRepository.GetAll().FirstOrDefaultAsync(x => x.Id == productViewModel.Id);
+            var category = _categoryRepository.GetCategoryByIdAsync(productViewModel.CategoryId);
             if (product == null)
             {
                 return new BaseResponse<Product>()
@@ -160,7 +161,7 @@ public class ProductService : IProductService
             product.Id = productViewModel.Id;
             product.Name = productViewModel.Name;
             product.Description = productViewModel.Description;
-            product.CategoryId = productViewModel.CategoryId;
+            product.Category = (Category)category;
             product.Price = productViewModel.Price;
 
             await _productRepository.Update(product);
@@ -181,11 +182,21 @@ public class ProductService : IProductService
         }
     } //
 
-    public IBaseResponse<List<ProductViewModel>> GetProductsByCategoryIdAsync(int categoryId)
+    public IBaseResponse<List<ProductViewModel>> GetProductsByCategoryIdAsync(int id)
     {
         try
         {
-            var products = _productRepository.GetProductsByCategoryId(categoryId).ToList(); // TODO async?
+            var category = _categoryRepository.GetCategoryByIdAsync(id);
+            if (!category.Any())
+            {
+                return new BaseResponse<List<ProductViewModel>>()
+                {
+                    Description = "Категория не найдена",
+                    StatusCode = StatusCode.CategoryNotFound
+                };
+            }
+            
+            var products = _productRepository.GetProductsByCategoryId(id).ToList(); // TODO async?
             if (!products.Any())
             {
                 return new BaseResponse<List<ProductViewModel>>()

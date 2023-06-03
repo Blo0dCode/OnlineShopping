@@ -16,6 +16,14 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\Бал у Сатаны\Desktop\OnlineShopping\OnlineShopping
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/Бал у Сатаны/Desktop/OnlineShopping/OnlineShopping/Views/Category/GetCategories.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcR2V0Q2F0ZWdvcmllcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Бал у Сатаны/Desktop/OnlineShopping/OnlineShopping/Views/Category/GetCategoryById.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcR2V0Q2F0ZWdvcnlCeUlkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Бал у Сатаны/Desktop/OnlineShopping/OnlineShopping/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

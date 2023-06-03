@@ -37,8 +37,8 @@ public class ProductRepository : IProductRepository
         return entity;
     }
 
-    public IQueryable<Product> GetProductsByCategoryId(int categoryId)
+    public IQueryable<Product> GetProductsByCategoryId(int id)
     {
-        return _db.Products.Where(p => p.CategoryId == categoryId);
+        return _db.Products.Where(p => p.Category.Id == id);
     }
 }

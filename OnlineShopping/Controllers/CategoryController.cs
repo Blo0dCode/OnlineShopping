@@ -1,30 +1,65 @@
 using Microsoft.AspNetCore.Mvc;
+using OnlineShopping.Domain.ViewModels.Category;
+using OnlineShopping.Service.Interfaces;
 
 namespace OnlineShopping.Controllers;
 
 public class CategoryController : Controller
 {
-    /*private readonly ICategoryService _categoryService;
-    private readonly IProductService _productService;
+    private readonly ICategoryService _categoryService;
 
-    public CategoryController(ICategoryService categoryService, IProductService productService)
+    public CategoryController(ICategoryService categoryService)
     {
         _categoryService = categoryService;
-        _productService = productService;
     }
 
     [HttpGet]
-    public IActionResult Index(int id)
+    public IActionResult GetCategories()
     {
-        var category = _categoryService.GetCategoryById(id);
-
-        if (category == null)
+        var response = _categoryService.GetCategories();
+        if (response.StatusCode == Domain.Enum.StatusCode.OK)
         {
-            return HttpNotFound();
+            return View(response.Data);
         }
 
-        var products = _productService.GetProductsByCategoryId(id);
+        return View("Error", $"{response.Description}");
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetCategoryById(int id)
+    {
+        var response = await _categoryService.GetCategoryByIdAsync(id);
+        if (response.StatusCode == Domain.Enum.StatusCode.OK)
+        {
+            return View(response.Data);
+        }
 
-        return View(products);
-    }*/
+        return View("Error", $"{response.Description}");
+        return View("Error");
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateCategory([FromBody]CategoryViewModel categoryViewModel)
+    {
+        var response = await _categoryService.CreateCategoryAsync(categoryViewModel);
+        
+        if (response.StatusCode == Domain.Enum.StatusCode.Created)
+        {
+            return RedirectToAction("GetCategories");
+        }
+        
+        return View("Error", $"{response.Description}");
+    }
+    
+    //[Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var response = await _categoryService.DeleteCategoryByIdAsync(id);
+        if (response.StatusCode == Domain.Enum.StatusCode.Deleted)
+        {
+            return RedirectToAction("GetCategories");
+        }
+
+        return View("Error", $"{response.Description}");
+    }
 }

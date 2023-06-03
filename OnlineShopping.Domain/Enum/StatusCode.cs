@@ -13,5 +13,6 @@ public enum StatusCode
 
     ProductsNotFound = 1,
     ProductNotFound = 2,
-    Deleted = 3
+    Deleted = 3,
+    CategoryNotFound = 4
 }

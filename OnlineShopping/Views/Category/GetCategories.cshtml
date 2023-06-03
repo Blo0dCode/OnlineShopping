@@ -1,0 +1,18 @@
+@model IEnumerable<OnlineShopping.Domain.Entity.Category>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+@foreach (var category in Model)
+{
+    <p>ИД: @category.Id</p>
+    <p>Название категории: @category.Name</p>
+    @if (@category.CategoryParent != null)
+    {
+        <p>Ид родителя: @category.CategoryParent.Id</p>
+        <p>Название категории родителя: @category.CategoryParent.Name</p>
+    }
+        <hr>
+}
