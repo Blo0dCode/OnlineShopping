@@ -1,4 +1,4 @@
-@model OnlineShopping.Domain.ViewModels.Category.CategoryViewModel
+@model OnlineShopping.Domain.Entity.Category
 
 @{
     ViewBag.Title = "title";
@@ -7,3 +7,13 @@
 
 <p>ИД: @Model.Id</p>
 <p>Название категории: @Model.Name</p>
+@if (@Model.CategoryParent != null)
+{
+    <p>ИД: @Model.Id</p>
+        <p>Название категории: @Model.Name</p>
+        @if (@Model.CategoryParent != null)
+        {
+            <p>Ид родителя: @Model.CategoryParent.Id</p>
+            <p>Название категории родителя: @Model.CategoryParent.Name</p>
+        }
+}

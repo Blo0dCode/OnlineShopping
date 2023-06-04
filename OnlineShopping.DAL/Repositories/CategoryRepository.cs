@@ -36,7 +36,7 @@ public class CategoryRepository : ICategoryRepository
         return category;
     }
 
-    public IQueryable<Category> GetCategoryByIdAsync(int categoryId)
+    public IQueryable<Category> GetCategoryByIdAsync(int? categoryId)
     {
         return _db.Categories.Where(c => c.Id == categoryId);
     }

@@ -12,7 +12,6 @@ public interface IMapper
 
     
     //Category
-    Category ToCategory(CategoryViewModel categoryViewModel, Category categoryParent);
-    Category ToCategory(CategoryViewModel categoryViewModel);
+    Category ToCategory(CategoryViewModel categoryViewModel, Category? categoryParent);
     CategoryViewModel ToCategoryViewModel(Category category);
 }

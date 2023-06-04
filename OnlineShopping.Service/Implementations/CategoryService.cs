@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineShopping.DAL.Interfaces;
 using OnlineShopping.Domain.Entity;
@@ -5,7 +6,6 @@ using OnlineShopping.Domain.Enum;
 using OnlineShopping.Domain.Interface;
 using OnlineShopping.Domain.Response;
 using OnlineShopping.Domain.ViewModels.Category;
-using OnlineShopping.Domain.ViewModels.Product;
 using OnlineShopping.Service.Interfaces;
 
 namespace OnlineShopping.Service.Implementations;
@@ -21,17 +21,17 @@ public class CategoryService : ICategoryService
         _mapper = mapper;
     }
 
-    public IBaseResponse<List<Category>> GetCategories()
+    public async Task<IBaseResponse<List<Category>>> GetCategoriesAsync()
     {
         try
         {
-            var categories = _categoryRepository.GetAll().ToList(); //TODO async?
+            var categories = await _categoryRepository.GetAll().ToListAsync();
             if (!categories.Any())
             {
                 return new BaseResponse<List<Category>>()
                 {
-                    Description = "Найдено 0 элементов",
-                    StatusCode = StatusCode.NoContent
+                    Description = "Категории не найдены",
+                    StatusCode = StatusCode.CategoriesNotFound
                 };
             }
 
@@ -45,39 +45,37 @@ public class CategoryService : ICategoryService
         {
             return new BaseResponse<List<Category>>()
             {
-                Description = $"[GetProductsAsync] : {e.Message}",
+                Description = $"[GetCategoriesAsync] : {e.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
     }
 
-    public async Task<IBaseResponse<CategoryViewModel>> GetCategoryByIdAsync(int categoryId)
+    public async Task<IBaseResponse<Category>> GetCategoryByIdAsync(int categoryId)
     {
         try
         {
             var category = await _categoryRepository.GetAll().FirstOrDefaultAsync(x => x.Id == categoryId);
             if (category == null)
             {
-                return new BaseResponse<CategoryViewModel>()
+                return new BaseResponse<Category>()
                 {
                     Description = "Категория не найдена",
                     StatusCode = StatusCode.CategoryNotFound
                 };
             }
 
-            var data = _mapper.ToCategoryViewModel(category);
-
-            return new BaseResponse<CategoryViewModel>()
+            return new BaseResponse<Category>()
             {
-                Data = data,
+                Data = category,
                 StatusCode = StatusCode.OK
             };
         }
         catch (Exception e)
         {
-            return new BaseResponse<CategoryViewModel>()
+            return new BaseResponse<Category>()
             {
-                Description = $"[GetProductByIdAsync] : {e.Message}",
+                Description = $"[GetCategoryByIdAsync] : {e.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
@@ -87,17 +85,16 @@ public class CategoryService : ICategoryService
     {
         try
         {
-            Category category;
-            
-            if (categoryViewModel.CategoryParentId == null)
+            var categoryParent = await _categoryRepository.GetCategoryByIdAsync(categoryViewModel.CategoryParentId).FirstOrDefaultAsync();
+            if (categoryViewModel.CategoryParentId != 0 && categoryParent == null)
             {
-                category = _mapper.ToCategory(categoryViewModel);
+                return new BaseResponse<Category>()
+                {
+                    Description = "Родительская категория не найдена",
+                    StatusCode = StatusCode.CategoryNotFound
+                };
             }
-            else
-            {
-                var categoryParent = _categoryRepository.GetCategoryByIdAsync(categoryViewModel.CategoryParentId);
-                category = _mapper.ToCategory(categoryViewModel, categoryParent.FirstOrDefault()); //TODO (Category)categoryParent правильно?
-            }
+            var category = _mapper.ToCategory(categoryViewModel, categoryParent);
 
             await _categoryRepository.Create(category);
 
@@ -117,6 +114,45 @@ public class CategoryService : ICategoryService
         }
     }
 
+    public async Task<IBaseResponse<Category>> UpdateCategoryAsync(CategoryViewModel categoryViewModel)
+    {
+        try
+        {
+            var category = await _categoryRepository.GetCategoryByIdAsync(categoryViewModel.Id).Include(x=>x.CategoryParent).FirstOrDefaultAsync();
+            var categoryParent = await _categoryRepository.GetCategoryByIdAsync(categoryViewModel.CategoryParentId)
+                .FirstOrDefaultAsync();
+            
+            if (category == null && categoryViewModel.CategoryParentId !=0 || categoryParent == null)
+            {
+                return new BaseResponse<Category>()
+                {
+                    Description = "Категория не найдена",
+                    StatusCode = StatusCode.CategoryNotFound
+                };
+            }
+
+            category.Id = categoryViewModel.Id;
+            category.Name = categoryViewModel.Name;
+            category.CategoryParent = categoryParent;
+
+            await _categoryRepository.Update(category);
+
+            return new BaseResponse<Category>()
+            {
+                Data = category,
+                StatusCode = StatusCode.Updated
+            };
+        }
+        catch (Exception e)
+        {
+            return new BaseResponse<Category>()
+            {
+                Description = $"[UpdateProductAsync] : {e.Message}",
+                StatusCode = StatusCode.InternalServerError
+            };
+        }
+    }
+
     public async Task<IBaseResponse<bool>> DeleteCategoryByIdAsync(int id)
     {
         try
@@ -127,8 +163,8 @@ public class CategoryService : ICategoryService
                 return new BaseResponse<bool>()
                 {
                     Data = false,
-                    Description = "Element not found",
-                    StatusCode = StatusCode.NoContent
+                    Description = "Категория не найдена",
+                    StatusCode = StatusCode.CategoryNotFound
                 };
             }
 

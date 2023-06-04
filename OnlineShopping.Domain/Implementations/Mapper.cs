@@ -42,15 +42,6 @@ public class Mapper : IMapper
         };
     }
 
-    public Category ToCategory(CategoryViewModel categoryViewModel)
-    {
-        return new Category()
-        {
-            Id = categoryViewModel.Id,
-            Name = categoryViewModel.Name
-        };
-    }
-
     public CategoryViewModel ToCategoryViewModel(Category category)
     {
         if (category.CategoryParent!=null)

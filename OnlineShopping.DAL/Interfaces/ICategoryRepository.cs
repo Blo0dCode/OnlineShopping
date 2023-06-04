@@ -4,5 +4,5 @@ namespace OnlineShopping.DAL.Interfaces;
 
 public interface ICategoryRepository : IBaseRepository<Category>
 {
-    IQueryable<Category> GetCategoryByIdAsync(int categoryId);
+    IQueryable<Category> GetCategoryByIdAsync(int? categoryId);
 }

@@ -1,14 +1,13 @@
-@model OnlineShopping.Domain.ViewModels.Product.ProductViewModel
+@model OnlineShopping.Domain.Entity.Product
 
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
 
-<h2>title</h2>
-
 <p>ИД: @Model.Id</p>
 <p>Название продукта: @Model.Name</p>
 <p>Описание продукта: @Model.Description</p>
 <p>Цена продукта: @Model.Price</p>
-<p>ИД категории продукта: @Model.CategoryId</p>
+<p>ИД категории продукта: @Model.Category.Id</p>
+<p>Название категории продукта: @Model.Category.Name</p>

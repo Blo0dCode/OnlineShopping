@@ -10,18 +10,16 @@ namespace OnlineShopping.Controllers;
 public class ProductController : Controller
 {
     private readonly IProductService _productService;
-    private readonly ICategoryService _categoryService;
 
-    public ProductController(IProductService productService, ICategoryService categoryService)
+    public ProductController(IProductService productService)
     {
         _productService = productService;
-        _categoryService = categoryService;
     }
 
     [HttpGet]
-    public IActionResult GetProducts()
+    public async Task<IActionResult> GetProducts()
     {
-        var response = _productService.GetProductsAsync();
+        var response = await _productService.GetProductsAsync();
         if (response.StatusCode == Domain.Enum.StatusCode.OK)
         {
             return View(response.Data);
@@ -39,20 +37,19 @@ public class ProductController : Controller
             return View(response.Data);
         }
 
-        //return View("Error", $"{response.Description}");
-        return View("Error");
+        return View("Error", $"{response.Description}");
     }
 
     [HttpGet]
-    public IActionResult GetProductsByCategoryId(int id)
+    public async Task<IActionResult> GetProductsByCategoryId(int id)
     {
-        var response = _productService.GetProductsByCategoryIdAsync(id);
+        var response = await _productService.GetProductsByCategoryIdAsync(id);
         if (response.StatusCode == Domain.Enum.StatusCode.OK)
         {
             return View(response.Data);
         }
 
-        return View("Error");
+        return View("Error", $"{response.Description}");
     }
 
     //[Authorize(Roles = "Admin")]
@@ -84,17 +81,20 @@ public class ProductController : Controller
             return RedirectToAction("GetProducts");
         }
 
-        return View("Error");
+        return View("Error", $"{response.Description}");
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] ProductViewModel viewModel)
+    public async Task<IActionResult> Update(ProductViewModel viewModel)
     {
-        if (ModelState.IsValid)
+        //if (ModelState.IsValid)
+
+        var response = await _productService.UpdateProductAsync(viewModel);
+        if (response.StatusCode == Domain.Enum.StatusCode.Updated)
         {
-            await _productService.UpdateProductAsync(viewModel);
+            return RedirectToAction("GetProducts");
         }
 
-        return RedirectToAction("GetProducts");
+        return View("Error", $"{response.Description}");
     }
 }

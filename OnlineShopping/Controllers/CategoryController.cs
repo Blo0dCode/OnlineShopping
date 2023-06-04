@@ -14,9 +14,9 @@ public class CategoryController : Controller
     }
 
     [HttpGet]
-    public IActionResult GetCategories()
+    public async Task<IActionResult> GetCategories()
     {
-        var response = _categoryService.GetCategories();
+        var response = await _categoryService.GetCategoriesAsync();
         if (response.StatusCode == Domain.Enum.StatusCode.OK)
         {
             return View(response.Data);
@@ -24,7 +24,7 @@ public class CategoryController : Controller
 
         return View("Error", $"{response.Description}");
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetCategoryById(int id)
     {
@@ -35,22 +35,35 @@ public class CategoryController : Controller
         }
 
         return View("Error", $"{response.Description}");
-        return View("Error");
     }
-    
+
     [HttpPost]
-    public async Task<IActionResult> CreateCategory([FromBody]CategoryViewModel categoryViewModel)
+    public async Task<IActionResult> CreateCategory([FromBody] CategoryViewModel categoryViewModel)
     {
         var response = await _categoryService.CreateCategoryAsync(categoryViewModel);
-        
+
         if (response.StatusCode == Domain.Enum.StatusCode.Created)
         {
             return RedirectToAction("GetCategories");
         }
-        
+
         return View("Error", $"{response.Description}");
     }
     
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody]CategoryViewModel viewModel)
+    {
+        //if (ModelState.IsValid)
+
+        var response = await _categoryService.UpdateCategoryAsync(viewModel);
+        if (response.StatusCode == Domain.Enum.StatusCode.Updated)
+        {
+            return RedirectToAction("GetCategories");
+        }
+
+        return View("Error", $"{response.Description}");
+    }
+
     //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {

@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using OnlineShopping.DAL.Interfaces;
 using OnlineShopping.Domain.Entity;
@@ -16,24 +15,24 @@ public class ProductService : IProductService
     private readonly IProductRepository _productRepository;
     private readonly ICategoryRepository _categoryRepository;
 
-    public ProductService(IProductRepository productRepository, IMapper mapper, ICategoryRepository categoryRepository)
+    public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper)
     {
         _productRepository = productRepository;
-        _mapper = mapper;
         _categoryRepository = categoryRepository;
+        _mapper = mapper;
     }
 
-    public IBaseResponse<List<Product>> GetProductsAsync()
+    public async Task<IBaseResponse<List<Product>>> GetProductsAsync()
     {
         try
         {
-            var products = _productRepository.GetAll().ToList(); //TODO async?
+            var products = await _productRepository.GetAll().Include(x => x.Category).ToListAsync();
             if (!products.Any())
             {
                 return new BaseResponse<List<Product>>()
                 {
-                    Description = "Найдено 0 элементов",
-                    StatusCode = StatusCode.NoContent
+                    Description = "Продукты не найдены",
+                    StatusCode = StatusCode.ProductsNotFound
                 };
             }
 
@@ -51,46 +50,54 @@ public class ProductService : IProductService
                 StatusCode = StatusCode.InternalServerError
             };
         }
-    } //
+    } 
 
-    public async Task<IBaseResponse<ProductViewModel>> GetProductByIdAsync(int id)
+    public async Task<IBaseResponse<Product>> GetProductByIdAsync(int id)
     {
         try
         {
-            var product = await _productRepository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+            var product = await _productRepository.GetAll().Include(x => x.Category)
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (product == null)
             {
-                return new BaseResponse<ProductViewModel>()
+                return new BaseResponse<Product>()
                 {
-                    Description = "Элемент не найден",
-                    StatusCode = StatusCode.NoContent
+                    Description = "Продукт не найден",
+                    StatusCode = StatusCode.ProductNotFound
                 };
             }
 
-            var data = _mapper.ToProductViewModel(product);
-
-            return new BaseResponse<ProductViewModel>()
+            return new BaseResponse<Product>()
             {
-                Data = data,
+                Data = product,
                 StatusCode = StatusCode.OK
             };
         }
         catch (Exception e)
         {
-            return new BaseResponse<ProductViewModel>()
+            return new BaseResponse<Product>()
             {
                 Description = $"[GetProductByIdAsync] : {e.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
-    } //
+    } 
 
     public async Task<IBaseResponse<Product>> CreateProductAsync(ProductViewModel productViewModel, byte[] imageData)
     {
         try
         {
-            var category = _categoryRepository.GetCategoryByIdAsync(productViewModel.CategoryId);
-            var product = _mapper.ToProduct(productViewModel, category.FirstOrDefault(), imageData); //TODO правильно?
+            var category = await _categoryRepository.GetCategoryByIdAsync(productViewModel.CategoryId).FirstOrDefaultAsync();
+            if (category == null)
+            {
+                return new BaseResponse<Product>()
+                {
+                    Description = "Категория не найдена",
+                    StatusCode = StatusCode.CategoryNotFound
+                };
+            }
+            
+            var product = _mapper.ToProduct(productViewModel, category, imageData);
 
             await _productRepository.Create(product);
 
@@ -108,7 +115,7 @@ public class ProductService : IProductService
                 StatusCode = StatusCode.InternalServerError
             };
         }
-    } //
+    } 
 
     public async Task<IBaseResponse<bool>> DeleteProductByIdAsync(int id)
     {
@@ -120,7 +127,7 @@ public class ProductService : IProductService
                 return new BaseResponse<bool>()
                 {
                     Data = false,
-                    Description = "Element not found",
+                    Description = "Продукт не найден",
                     StatusCode = StatusCode.NoContent
                 };
             }
@@ -148,20 +155,29 @@ public class ProductService : IProductService
         try
         {
             var product = await _productRepository.GetAll().FirstOrDefaultAsync(x => x.Id == productViewModel.Id);
-            var category = _categoryRepository.GetCategoryByIdAsync(productViewModel.CategoryId);
+            var category = await _categoryRepository.GetCategoryByIdAsync(productViewModel.CategoryId).FirstOrDefaultAsync();
+            
             if (product == null)
             {
                 return new BaseResponse<Product>()
                 {
-                    Description = "Element not found",
-                    StatusCode = StatusCode.NoContent
+                    Description = "Продукт не найден",
+                    StatusCode = StatusCode.ProductNotFound
+                };
+            }
+            if (category == null)
+            {
+                return new BaseResponse<Product>()
+                {
+                    Description = "Категория не найдена",
+                    StatusCode = StatusCode.CategoryNotFound
                 };
             }
 
             product.Id = productViewModel.Id;
             product.Name = productViewModel.Name;
             product.Description = productViewModel.Description;
-            product.Category = (Category)category;
+            product.Category = category;
             product.Price = productViewModel.Price;
 
             await _productRepository.Update(product);
@@ -169,7 +185,7 @@ public class ProductService : IProductService
             return new BaseResponse<Product>()
             {
                 Data = product,
-                StatusCode = StatusCode.OK
+                StatusCode = StatusCode.Updated
             };
         }
         catch (Exception e)
@@ -180,13 +196,13 @@ public class ProductService : IProductService
                 StatusCode = StatusCode.InternalServerError
             };
         }
-    } //
+    } 
 
-    public IBaseResponse<List<ProductViewModel>> GetProductsByCategoryIdAsync(int id)
+    public async Task<IBaseResponse<List<ProductViewModel>>> GetProductsByCategoryIdAsync(int id)
     {
         try
         {
-            var category = _categoryRepository.GetCategoryByIdAsync(id);
+            var category = await _categoryRepository.GetCategoryByIdAsync(id).ToListAsync();
             if (!category.Any())
             {
                 return new BaseResponse<List<ProductViewModel>>()
@@ -195,18 +211,18 @@ public class ProductService : IProductService
                     StatusCode = StatusCode.CategoryNotFound
                 };
             }
-            
-            var products = _productRepository.GetProductsByCategoryId(id).ToList(); // TODO async?
+
+            var products = await _productRepository.GetProductsByCategoryId(id).ToListAsync();
             if (!products.Any())
             {
                 return new BaseResponse<List<ProductViewModel>>()
                 {
-                    Description = "Найдено 0 элементов",
-                    StatusCode = StatusCode.NoContent
+                    Description = "Продукты не найдены",
+                    StatusCode = StatusCode.ProductsNotFound
                 };
             }
 
-            var productsViewModel = products.Select(x => _mapper.ToProductViewModel(x)).ToList(); //TODO async?
+            var productsViewModel = products.Select(x => _mapper.ToProductViewModel(x)).ToList();
 
             return new BaseResponse<List<ProductViewModel>>()
             {
@@ -222,5 +238,5 @@ public class ProductService : IProductService
                 StatusCode = StatusCode.InternalServerError
             };
         }
-    } //
+    } 
 }

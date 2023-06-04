@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineShopping.Domain.ViewModels.Category;
 
@@ -12,5 +13,5 @@ public class CategoryViewModel
     [MinLength(2, ErrorMessage = " Минимальная длина должна быть больше двух символов")]
     public string Name { get; set; }
     
-    public int CategoryParentId { get; set; }
+    public int? CategoryParentId { get; set; }
 }

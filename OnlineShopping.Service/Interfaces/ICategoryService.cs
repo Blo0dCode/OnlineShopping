@@ -6,8 +6,9 @@ namespace OnlineShopping.Service.Interfaces;
 
 public interface ICategoryService
 {
-    IBaseResponse<List<Category>> GetCategories();
-    Task<IBaseResponse<CategoryViewModel>> GetCategoryByIdAsync(int categoryId);
+    Task<IBaseResponse<List<Category>>> GetCategoriesAsync();
+    Task<IBaseResponse<Category>> GetCategoryByIdAsync(int categoryId);
     Task<IBaseResponse<Category>> CreateCategoryAsync(CategoryViewModel categoryViewModel);
+    Task<IBaseResponse<Category>> UpdateCategoryAsync(CategoryViewModel categoryViewModel);
     Task<IBaseResponse<bool>> DeleteCategoryByIdAsync(int id);
 }
