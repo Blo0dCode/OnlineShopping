@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Emit;
 using Microsoft.AspNetCore.Http;
 
 namespace OnlineShopping.Domain.ViewModels.Product;
@@ -25,5 +26,7 @@ public class ProductViewModel
     [Required(ErrorMessage = "Введите категорию одежды")]
     public int CategoryId { get; set; }
     
+    [Display(Name= "Фото")]
+    [Required(ErrorMessage = "Добавте фотографию")]
     public IFormFile Avatar { get; set; }
 }

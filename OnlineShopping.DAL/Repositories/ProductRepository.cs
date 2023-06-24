@@ -4,7 +4,7 @@ using OnlineShopping.Domain.Entity;
 
 namespace OnlineShopping.DAL.Repositories;
 
-public class ProductRepository : IProductRepository
+public class ProductRepository : IBaseRepository<Product>
 {
     private readonly ApplicationDbContext _db;
 
@@ -35,10 +35,5 @@ public class ProductRepository : IProductRepository
         _db.Products.Update(entity);
         await _db.SaveChangesAsync();
         return entity;
-    }
-
-    public IQueryable<Product> GetProductsByCategoryId(int id)
-    {
-        return _db.Products.Where(p => p.Category.Id == id);
     }
 }

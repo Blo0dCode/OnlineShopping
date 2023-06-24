@@ -12,10 +12,10 @@ namespace OnlineShopping.Service.Implementations;
 public class ProductService : IProductService
 {
     private readonly IMapper _mapper;
-    private readonly IProductRepository _productRepository;
-    private readonly ICategoryRepository _categoryRepository;
+    private readonly IBaseRepository<Product> _productRepository;
+    private readonly IBaseRepository<Category> _categoryRepository;
 
-    public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper)
+    public ProductService(IBaseRepository<Product> productRepository, IBaseRepository<Category> categoryRepository, IMapper mapper)
     {
         _productRepository = productRepository;
         _categoryRepository = categoryRepository;
@@ -87,7 +87,7 @@ public class ProductService : IProductService
     {
         try
         {
-            var category = await _categoryRepository.GetCategoryByIdAsync(productViewModel.CategoryId).FirstOrDefaultAsync();
+            var category = await _categoryRepository.GetAll().FirstOrDefaultAsync(x => x.Id == productViewModel.CategoryId);
             if (category == null)
             {
                 return new BaseResponse<Product>()
@@ -155,7 +155,7 @@ public class ProductService : IProductService
         try
         {
             var product = await _productRepository.GetAll().FirstOrDefaultAsync(x => x.Id == productViewModel.Id);
-            var category = await _categoryRepository.GetCategoryByIdAsync(productViewModel.CategoryId).FirstOrDefaultAsync();
+            var category = await _categoryRepository.GetAll().FirstOrDefaultAsync(x => x.Id == productViewModel.CategoryId);
             
             if (product == null)
             {
@@ -202,8 +202,8 @@ public class ProductService : IProductService
     {
         try
         {
-            var category = await _categoryRepository.GetCategoryByIdAsync(id).ToListAsync();
-            if (!category.Any())
+            var category = await _categoryRepository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+            if (category == null)
             {
                 return new BaseResponse<List<ProductViewModel>>()
                 {
@@ -212,7 +212,7 @@ public class ProductService : IProductService
                 };
             }
 
-            var products = await _productRepository.GetProductsByCategoryId(id).ToListAsync();
+            var products = await _productRepository.GetAll().Where(x => x.Category.Id == id).ToListAsync();
             if (!products.Any())
             {
                 return new BaseResponse<List<ProductViewModel>>()

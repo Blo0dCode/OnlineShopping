@@ -3,7 +3,7 @@ using OnlineShopping.Domain.Entity;
 
 namespace OnlineShopping.DAL.Repositories;
 
-public class CategoryRepository : ICategoryRepository
+public class CategoryRepository : IBaseRepository<Category>
 {
     private readonly ApplicationDbContext _db;
 
@@ -34,10 +34,5 @@ public class CategoryRepository : ICategoryRepository
         _db.Categories.Update(category);
         await _db.SaveChangesAsync();
         return category;
-    }
-
-    public IQueryable<Category> GetCategoryByIdAsync(int? categoryId)
-    {
-        return _db.Categories.Where(c => c.Id == categoryId);
     }
 }

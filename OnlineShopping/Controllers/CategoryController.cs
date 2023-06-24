@@ -10,7 +10,7 @@ public class CategoryController : Controller
 
     public CategoryController(ICategoryService categoryService)
     {
-        _categoryService = categoryService;
+        _categoryService = categoryService; 
     }
 
     [HttpGet]

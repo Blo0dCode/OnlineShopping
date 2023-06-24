@@ -13,9 +13,9 @@ namespace OnlineShopping.Service.Implementations;
 public class CategoryService : ICategoryService
 {
     private readonly IMapper _mapper;
-    private readonly ICategoryRepository _categoryRepository;
+    private readonly IBaseRepository<Category> _categoryRepository;
 
-    public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
+    public CategoryService(IBaseRepository<Category> categoryRepository, IMapper mapper)
     {
         _categoryRepository = categoryRepository;
         _mapper = mapper;
@@ -85,7 +85,10 @@ public class CategoryService : ICategoryService
     {
         try
         {
-            var categoryParent = await _categoryRepository.GetCategoryByIdAsync(categoryViewModel.CategoryParentId).FirstOrDefaultAsync();
+
+            var categoryParent = await _categoryRepository.GetAll()
+                .FirstOrDefaultAsync(x => x.Id == categoryViewModel.CategoryParentId);
+            
             if (categoryViewModel.CategoryParentId != 0 && categoryParent == null)
             {
                 return new BaseResponse<Category>()
@@ -118,11 +121,12 @@ public class CategoryService : ICategoryService
     {
         try
         {
-            var category = await _categoryRepository.GetCategoryByIdAsync(categoryViewModel.Id).Include(x=>x.CategoryParent).FirstOrDefaultAsync();
-            var categoryParent = await _categoryRepository.GetCategoryByIdAsync(categoryViewModel.CategoryParentId)
-                .FirstOrDefaultAsync();
+            var category = await _categoryRepository.GetAll().Include(x=>x.CategoryParent).FirstOrDefaultAsync(x => x.Id == categoryViewModel.Id);
+            var categoryParent  = await _categoryRepository.GetAll()
+                .FirstOrDefaultAsync(x => x.Id == categoryViewModel.CategoryParentId);
             
-            if (category == null && categoryViewModel.CategoryParentId !=0 || categoryParent == null)
+            
+            if (category == null || categoryParent == null)
             {
                 return new BaseResponse<Category>()
                 {

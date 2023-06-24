@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShopping.DAL;
 using OnlineShopping.DAL.Interfaces;
 using OnlineShopping.DAL.Repositories;
+using OnlineShopping.Domain.Entity;
 using OnlineShopping.Domain.Implementations;
 using OnlineShopping.Domain.Interface;
 using OnlineShopping.Service.Implementations;
@@ -16,9 +17,9 @@ var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(o =>
     o.UseNpgsql(connection));
 
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IBaseRepository<Product>, ProductRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IBaseRepository<Category>, CategoryRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IMapper, Mapper>(); //TODO правильно ли я его всунул
 
